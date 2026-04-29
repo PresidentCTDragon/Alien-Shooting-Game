@@ -1,11 +1,10 @@
 import sys
 import pygame
 from settings import Settings
-from ship import Ship
-from bullet import Bullet
-#from cuphead import Cuphead
+from rocket import Rocket
 
-class AlienInvasion:
+
+class MoveTheRocket:
     """ Class to manage game assets and initialize the game. """     
     def __init__(self):
         pygame.init()
@@ -15,18 +14,15 @@ class AlienInvasion:
         self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         self.settings.screen_width = self.screen.get_rect().width
         self.settings.screen_height = self.screen.get_rect().height
-        pygame.display.set_caption("Alien Invasion")
-        self.ship = Ship(self)
-        self.bullets = pygame.sprite.Group()
-        #self.cuphead = Cuphead(self)
+        pygame.display.set_caption("Move the Rocket")
+        self.rocket = Rocket(self)
     
     def run_game(self):
         """ Start the main loop for the game. """
         while True:
             # Watch for keyboard and mouse events.       
             self._check_events()
-            self.ship.update()
-            self._update_bullets()
+            self.rocket.update()
             self._update_screen()
             self.clock.tick(60) # make it run at 60fps
     
@@ -44,50 +40,44 @@ class AlienInvasion:
     def _check_keydown_events(self, event):
         """ Respond to keypresses """
         if event.key == pygame.K_RIGHT:
-            self.ship.moving_right = True
+            self.rocket.moving_right = True
                     
         elif event.key == pygame.K_LEFT:
-            self.ship.moving_left = True
+            self.rocket.moving_left = True
+            
+        elif event.key == pygame.K_UP:
+            self.rocket.moving_up = True
+            
+        elif event.key == pygame.K_DOWN:
+            self.rocket.moving_down = True
             
         elif event.key == pygame.K_q:
             sys.exit()
             
-        elif event.key == pygame.K_SPACE:
-            self._fire_bullet()
             
     def _check_keyup_events(self, event):
         """ Respond to key releases """
         if event.key == pygame.K_RIGHT:
-            self.ship.moving_right = False            
+            self.rocket.moving_right = False            
                     
         elif event.key == pygame.K_LEFT:
-            self.ship.moving_left = False
-            
-    def _fire_bullet(self):
-        """ Create a new bullet and add it to the bullets group. """
-        if len(self.bullets) < self.settings.bullets_allowed:
-            new_bullet = Bullet(self)
-            self.bullets.add(new_bullet)
-            
-    def _update_bullets(self):
-        """ Update position of bullets and get rid of old bullets. """
-        self.bullets.update()
-        # Get rid of bullets that have disappeared.
-        for bullet in self.bullets.copy():
-            if bullet.rect.bottom <= 0:
-                self.bullets.remove(bullet)
+            self.rocket.moving_left = False
+
+        elif event.key == pygame.K_UP:
+            self.rocket.moving_up = False
+
+        elif event.key == pygame.K_DOWN:
+            self.rocket.moving_down = False
+
 
     # Redraw the screen during each pass through the loop
     def _update_screen(self):
         self.screen.fill(self.settings.bg_color)
-        for bullet in self.bullets.sprites():
-            bullet.draw_bullet()
-        self.ship.blitme()
-        #self.cuphead.blitme()
+        self.rocket.blitme()
         # Make the most recently drawn screen visible.
         pygame.display.flip()
 
 if __name__ == '__main__':
     ## Make a game instance and run the game.
-    ai = AlienInvasion()
+    ai = MoveTheRocket()
     ai.run_game()
