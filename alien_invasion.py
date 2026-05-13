@@ -13,6 +13,9 @@ from alien import Alien
 #from cuphead import Cuphead
 from random import randint
 
+from pathlib import Path
+path = Path('high_score.txt')
+
 class AlienInvasion:
     """ Class to manage game assets and initialize the game. """     
     def __init__(self):
@@ -72,6 +75,7 @@ class AlienInvasion:
         """ Respond to keypresses and mouse events. """
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                path.write_text(str(self.stats.high_score))
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
                 self._check_keydown_events(event)
@@ -102,6 +106,7 @@ class AlienInvasion:
             self.ship.moving_left = True
             
         elif event.key == pygame.K_q:
+            path.write_text(str(self.stats.high_score))
             sys.exit()
             
         elif event.key == pygame.K_SPACE:
@@ -145,7 +150,10 @@ class AlienInvasion:
                 self.sb.check_high_score()
             
         if not self.aliens:
-            # Destroy existing bullets and create new fleet.
+            self.start_new_level()
+            
+    def start_new_level(self):
+        # Destroy existing bullets and create new fleet.
             self.bullets.empty()
             self._create_fleet()
             self.settings.increase_speed()

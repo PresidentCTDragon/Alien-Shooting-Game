@@ -1,3 +1,8 @@
+from pathlib import Path
+
+path = Path('high_score.txt')
+high_score_text = path.read_text() if path.exists() else '0'
+
 class GameStats:
     """ Track statistics for Alien Invasion. """
     
@@ -7,7 +12,7 @@ class GameStats:
         self.reset_stats()
         
         # High score should never be reset.
-        self.high_score = 0
+        self.high_score = int(high_score_text)
         
         # Start Alien Invasion in an active state.
         self.game_active = True
